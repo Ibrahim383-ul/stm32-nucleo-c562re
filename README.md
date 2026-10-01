@@ -109,7 +109,7 @@ The `nucleo_c562re` board includes an integrated **STLINK-V3EC** debug tool inte
 | **ST-LINK GDB Server** | — | ✅ *(default)* | ✅ | ✅ |
 | **pyOCD** | ✅ | ✅ | ✅ | ✅ |
 
-### Flashing an application (Blinky Beispiel)
+### Flashing an application (CAN-FD Telemetrie)
 
 Anwendung mit Zephyr RTOS kompilieren und auf das Board flashen:
 
