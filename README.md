@@ -114,8 +114,8 @@ The `nucleo_c562re` board includes an integrated **STLINK-V3EC** debug tool inte
 Anwendung mit Zephyr RTOS kompilieren und auf das Board flashen:
 
 ```bash
-# 1. Projekt kompilieren
-west build -b nucleo_c562re samples/basic/blinky
+# 1. CAN-FD Telemetrie-Projekt kompilieren
+west build -b nucleo_c562re .
 
-# 2. Auf das Board flashen
-west flash --runner stm32cubeprogrammer
+# 2. Auf das Nucleo-Board flashen
+west flash
