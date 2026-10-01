@@ -1,66 +1,121 @@
-# 🚀 STM32 NUCLEO-C562RE Hardware & CAN-FD Showcase
+# Nucleo C562RE
 
-![STM32](https://img.shields.io/badge/MCU-STM32C562RET6-03234B?style=for-the-badge&logo=stmicroelectronics)
-![Arm](https://img.shields.io/badge/Architecture-Arm%C2%AE%20Cortex%C2%AE--M33-0091BD?style=for-the-badge&logo=arm)
-![CAN-FD](https://img.shields.io/badge/Fieldbus-CAN--FD%20Transceiver-E7352C?style=for-the-badge)
-![Zephyr](https://img.shields.io/badge/RTOS-Zephyr%20Supported-black?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-
-Entwicklungs- und Evaluierungs-Plattform für das **STM32 NUCLEO-C562RE** Board mit modernem **Arm® Cortex®-M33** Mikrocontroller. Dieses Projekt demonstriert den Einstieg in professionelle 32-Bit-Embedded-Entwicklung, die Ansteuerung der Onboard-Peripherie sowie industrielle Bus-Kommunikation über den integrierten **CAN-FD Transceiver**.
+| Eigenschaft | Details |
+| :--- | :--- |
+| **Name** | `nucleo_c562re` |
+| **Hersteller (Vendor)** | [STMicroelectronics](https://www.st.com/en/evaluation-tools/nucleo-c562re.html) |
+| **Status** | Maintained |
+| **Architektur** | [ARM](https://docs.zephyrproject.org/latest/boards/index.html#arch=arm) |
+| **SoC** | [stm32c562xx](https://docs.zephyrproject.org/latest/boards/index.html#soc=stm32c562xx) |
+| **Speicher** | **128 KiB RAM**, **512 KiB Flash** |
 
 ---
 
-## ⚡ Board-Übersicht & Hardware-Aufbau
+## Overview
+
+The STM32 Nucleo-64 development board with **STM32C562RE MCU**, supports Arduino and ST morpho connectivity.
+
+The STM32 Nucleo-64 board provides an affordable and flexible way for users to try out new concepts and build prototypes by choosing from the various combinations of performance and power consumption features provided by the STM32 microcontroller. For the compatible boards, the internal or external SMPS significantly reduces power consumption in Run mode.
+
+The ARDUINO® Uno V3 connectivity support and the ST morpho headers allow the easy expansion of the functionality of the STM32 Nucleo open development platform with a wide choice of specialized shields.
+
+The STM32 Nucleo-64 board does not require any separate probe as it integrates the ST-LINK debugger/programmer.
 
 <p align="center">
-  <!-- HIER EINFACH DEIN BILD VOM PC HINEINZIEHEN (Drag & Drop): -->
-  <img width="600" alt="STM32 NUCLEO C562RE Board" src="HIER_BILD_REINZIEHEN" />
+  <img src="https://docs.zephyrproject.org/latest/_images/nucleo_c562re1.webp" alt="Nucleo C562RE" width="550" />
 </p>
 
-### Technische Eckdaten:
-* **Mikrocontroller (MCU):** STM32C562RET6 im LQFP64-Gehäuse
-* **Prozessorkern:** Arm® Cortex®-M33 mit MPU & TrustZone®
-* **Speicherausstattung:** 512 KiB Flash, 128 KiB SRAM
-* **Integrierter Debugger:** Onboard **STLINK-V3EC** (Programmierung & Live-Debugging via USB-C)
-* **Konnektivität:** Integrierter CAN-FD Transceiver, USB Type-C® Device, Arduino Uno V3 & ST Morpho Header
+More information about the board can be found at the [Nucleo C562RE website](https://www.st.com/en/evaluation-tools/nucleo-c562re.html).
 
 ---
 
-## 🔌 Pin-Belegung & Schnittstellen
+## Hardware
 
-### 1. Integrierter CAN-FD Bus (FDCAN1)
-Der Onboard-Transceiver ist direkt auf dem Board mit dem Mikrocontroller verbunden und über die grüne 3-polige Schraubklemme (**CN18**) zugänglich:
+* **STM32C562RET6 microcontroller** based on the **Arm® Cortex®-M33** core in an LQFP64 package
+* 32.768 kHz LSE crystal oscillator
+* 24 MHz HSE crystal oscillator
+* One user LED (LD1)
+* Three push-buttons: user, reset, and boot
+* USB Type-C® (USB full speed, Device mode)
+* **CAN FD transceiver** onboard
+* **Board connectors:**
+  * USB Type-C® connector
+  * MIPI10 connector for debugging (SWD, JTAG)
+  * CAN FD connector (CN18)
+  * ARDUINO® Uno V3 connector
+  * ST morpho expansion connectors for full access to the STM32 I/Os
+* Flexible power-supply options: ST-LINK USB VBUS, USB connector, or external sources
+* On-board **STLINK-V3EC** debugger/programmer with USB re-enumeration capability: mass storage, Virtual COM port, and debug port
 
-| Klemme CN18 | Signal | STM32 Pin | Funktion |
+More information about STM32C562RE can be found in the [STM32C5 Reference Manual (RM0522)](https://www.st.com/resource/en/reference_manual/rm0522-stm32c5.pdf).
+
+---
+
+## Supported Features
+
+The `nucleo_c562re` board supports the hardware features listed below:
+
+| Type | Location | Description | Compatible String |
 | :--- | :--- | :--- | :--- |
-| **Pin 1** | **CANH** | — | CAN High Signalleitung |
-| **Pin 2** | **CANL** | — | CAN Low Signalleitung |
-| **Pin 3** | **GND** | **GND** | Massebezug |
-| *(Intern)* | CAN_RX | **PB8** | FDCAN1 Empfangsleitung |
-| *(Intern)* | CAN_TX | **PB9** | FDCAN1 Sendeleitung |
-| *(Intern)* | Standby | **PE2** | Transceiver Standby-Steuerung |
-
-> 💡 **Bus-Terminierung:** Über den Jumper **JP9** kann der integrierte **120-Ω Abschlusswiderstand** bei Bedarf direkt zugeschaltet werden.
-
-### 2. Taster & LEDs
-
-| Element | STM32 Pin | Beschreibung |
-| :--- | :--- | :--- |
-| **User LED (LD1)** | **PA5** | Frei programmierbare grüne LED *(geteilt mit Arduino D13 / SPI1 SCK)* |
-| **User Button (B1)** | **PC13** | Blauer programmierbarer Taster |
-| **Reset Button (B2)** | **NRST** | Schwarzer System-Reset-Taster |
+| **CPU** | on-chip | ARM Cortex-M33 CPU | `arm,cortex-m33` |
+| **CAN** | on-chip / on-board | STM32 FDCAN CAN FD controller | `st,stm32-fdcan` |
+| **ADC** | on-chip | STM32 ADC | `st,stm32n6-adc` |
+| **DAC** | on-chip | STM32 family DAC | `st,stm32-dac` |
+| **DMA** | on-chip | STM32U5 DMA controller | `st,stm32u5-dma` |
+| **Clock control** | on-chip | STM32C5 RCC, HSE, LSE | `st,stm32c5-rcc` |
+| **Crypto** | on-chip | HASH Processor & AES Accelerator | `st,stm32-hash`, `st,stm32-aes` |
+| **GPIO** | on-chip | STM32 GPIO Controller | `st,stm32-gpio` |
+| **Headers** | on-board | Arduino Uno R3 & ST Morpho | `arduino-header-r3`, `st-morpho-header` |
+| **I2C / I3C** | on-chip | I2C V2 & I3C controller | `st,stm32-i2c-v2`, `st,stm32-i3c` |
+| **SPI** | on-chip | STM32H7 SPI controller | `st,stm32h7-spi` |
+| **Serial** | on-chip | LPUART, USART, UART | `st,stm32-lpuart`, `st,stm32-usart` |
+| **USB** | on-chip | STM32 USB controller | `st,stm32-usb` |
+| **Timer / PWM** | on-chip | General Purpose & Advanced Timers | `st,stm32-timers`, `st,stm32-pwm` |
+| **RTC / WDT** | on-chip | Real-Time Clock & Watchdog | `st,stm32-rtc`, `st,stm32-watchdog` |
 
 ---
 
-## 🔄 Systemarchitektur
+## Connections and IOs
 
-```mermaid
-flowchart TD
-    Host["Entwicklungs-PC (VS Code / STM32CubeIDE)"] -->|USB-C / SWD Debugging| STLink["On-Board STLINK-V3EC"]
-    STLink -->|Flashen & Debuggen| MCU["STM32C562RET6 (Arm Cortex-M33)"]
-    
-    MCU <-->|PB8 (RX) / PB9 (TX)| Transceiver["On-Board CAN-FD Transceiver"]
-    Transceiver <-->|Klemme CN18: CANH / CANL| CAN["CAN-FD Bus (Sensoren / KFZ-Netzwerk)"]
-    
-    MCU -->|PA5| LED["User LED (Grün)"]
-    Button["User Button (PC13)"] -->|Interrupt| MCU
+Each of the GPIO pins can be configured by software as output (push-pull or open-drain), as input (with or without pull-up or pull-down), or as peripheral alternate function.
+
+> ⚠️ **Pin Conflict Note:** In default configuration, there is a potential conflict on **PA5** (ARDUINO® D13) pin that is connected both to the green LED (LD1) and to SPI1 SCK (ARDUINO® SPI). It is not recommended to use both functions simultaneously.
+
+### CAN FD Interface
+The board has an onboard CAN FD transceiver connected to **FDCAN1**:
+* `PB8`: CAN receive (`CAN_RX`)
+* `PB9`: CAN transmit (`CAN_TX`)
+* `PE2`: Transceiver standby control (Low = normal operation, High = standby)
+
+The CAN FD bus is available on screw connector **CN18**:
+* **Pin 1:** `CANH`
+* **Pin 2:** `CANL`
+* **Pin 3:** `GND`
+
+> 💡 **Termination:** Jumper **JP9** connects the onboard 120-ohm termination resistor when closed.
+
+### USB Configuration
+By default, the dead-battery pull-downs are not present on the connector (self-powered mode). Therefore, the board cannot be powered from the user USB-C connector using a USB-C-to-USB-C cable. A legacy USB-C-to-USB-A cable works as expected, or you can power via the ST-Link USB port.
+
+---
+
+## Programming and Debugging
+
+The `nucleo_c562re` board includes an integrated **STLINK-V3EC** debug tool interface.
+
+| Runner | Flash | Debug | Attach | GDB Server |
+| :--- | :---: | :---: | :---: | :---: |
+| **STM32CubeProgrammer** | ✅ *(default)* | — | — | — |
+| **ST-LINK GDB Server** | — | ✅ *(default)* | ✅ | ✅ |
+| **pyOCD** | ✅ | ✅ | ✅ | ✅ |
+
+### Flashing an application (Blinky Beispiel)
+
+Anwendung mit Zephyr RTOS kompilieren und auf das Board flashen:
+
+```bash
+# 1. Projekt kompilieren
+west build -b nucleo_c562re samples/basic/blinky
+
+# 2. Auf das Board flashen
+west flash --runner stm32cubeprogrammer
